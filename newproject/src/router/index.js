@@ -126,7 +126,6 @@ export const constantRoutes = [
  */
 // 动态路由规则
 export const asyncRoutes = [
-
   {
     path: '/goods',
     component: Layout,
@@ -155,6 +154,30 @@ export const asyncRoutes = [
       name: 'goodsform',
       meta: {
         title: '商品添加',
+        icon: 'guide',
+        noCache: true,
+        roles: ['admin']
+      }
+    }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/listPage',
+    alwaysShow: true,
+    name: 'userPage',
+    meta: {
+      title: '用户管理',
+      icon: 'user',
+      roles: ['admin']
+    },
+    children: [{
+      path: 'listPage',
+      component: () => import('@/views/user/listpage.vue'),
+      name: 'userList',
+      meta: {
+        title: '用户列表',
         icon: 'guide',
         noCache: true,
         roles: ['admin']
