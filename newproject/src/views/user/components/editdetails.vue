@@ -105,7 +105,7 @@ export default {
   name: 'Details',
   props: {
     userid: {
-      type: Number,
+      type: [Number, String],
       required: true
     }
   },

@@ -184,6 +184,65 @@ export const asyncRoutes = [
       }
     }
     ]
+  },
+  {
+    path: '/schoolyear',
+    component: Layout,
+    redirect: '/schoolyear/listPage',
+    alwaysShow: true,
+    name: 'yearPage',
+    meta: {
+      title: '学年管理',
+      icon: 'user',
+      roles: ['admin']
+    },
+    children: [{
+      path: 'listPage',
+      component: () => import('@/views/schoolYear/list.vue'),
+      name: 'yearList',
+      meta: {
+        title: '学年列表',
+        icon: 'guide',
+        noCache: true,
+        roles: ['admin']
+      }
+    },
+    {
+      path: 'add',
+      component: () => import('@/views/schoolYear/addform.vue'),
+      name: 'yearList',
+      meta: {
+        title: '学年添加',
+        icon: 'guide',
+        noCache: true,
+        roles: ['admin']
+      }
+    }
+    ]
+  },
+  {
+    path: '/activity',
+    component: Layout,
+    redirect: '/activity/listPage',
+    alwaysShow: true,
+    name: 'activityPage',
+    meta: {
+      title: '活动管理',
+      icon: 'user',
+      roles: ['admin']
+    },
+    children: [{
+      path: 'listPage',
+      component: () => import('@/views/activity/main.vue'),
+      name: 'activityList',
+      meta: {
+        title: '用户列表',
+        icon: 'guide',
+        noCache: true,
+        roles: ['admin']
+      }
+    }
+    ]
   }
 
   // 自带模块

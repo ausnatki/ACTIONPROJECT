@@ -55,7 +55,7 @@ export default {
   },
   props: {
     userid: {
-      type: Number,
+      type: [Number, String],
       required: true
     },
     dialogflag: {
