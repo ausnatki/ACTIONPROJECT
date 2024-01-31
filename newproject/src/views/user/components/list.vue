@@ -28,6 +28,13 @@
         label="所属院系"
       />
       <el-table-column
+        label="状态"
+      >
+        <template slot-scope="scope">
+          <el-tag :type="switchtype(scope.row)">{{ switchcontent(scope.row) }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="startTime"
         label="入学年份"
       />
@@ -73,7 +80,8 @@ export default {
         name: '帅小伙',
         college: '软件学院',
         iphone: '18581348911',
-        startTime: '2021'
+        startTime: '2021',
+        state: 1
       },
       {
         id: 2,
@@ -81,7 +89,8 @@ export default {
         name: '帅小伙',
         college: '建筑学院',
         iphone: '18581348911',
-        startTime: '2021'
+        startTime: '2021',
+        state: 1
       },
       {
         id: 3,
@@ -89,7 +98,8 @@ export default {
         name: '帅小伙',
         college: '通信学院',
         iphone: '18581348911',
-        startTime: '2021'
+        startTime: '2021',
+        state: 2
       }]
     }
   },
@@ -101,6 +111,26 @@ export default {
     },
     handleDelete(index, row) {
       console.log(index, row)
+    },
+    switchtype(row) {
+      switch (row.state) {
+        case 1:
+          return 'success'
+        case 2:
+          return 'danger'
+        default:
+          return 'info'
+      }
+    },
+    switchcontent(row) {
+      switch (row.state) {
+        case 1:
+          return '正常状态'
+        case 2:
+          return '禁用状态'
+        default:
+          return '位置状态'
+      }
     }
   }
 }

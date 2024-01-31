@@ -217,6 +217,17 @@ export const asyncRoutes = [
         noCache: true,
         roles: ['admin']
       }
+    },
+    {
+      path: 'semesterlist',
+      component: () => import('@/views/schoolYear/semesterlist.vue'),
+      name: 'semesterList',
+      meta: {
+        title: '学期列表',
+        icon: 'guide',
+        noCache: true,
+        roles: ['admin']
+      }
     }
     ]
   },

@@ -66,7 +66,7 @@ export default {
   data() {
     return {
       dialogFormVisible: true,
-      loading: true,
+      loading: false,
       currentDate: '2021-06-01'
     }
   },

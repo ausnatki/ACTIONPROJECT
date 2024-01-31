@@ -28,13 +28,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="stageName"
-        label="学年"
+        prop="name"
+        label="学期名称"
       />
-      <el-table-column
-        prop="createTime"
-        label="创建时间"
-      />
+
       <el-table-column
         prop="state"
         label="状态"
@@ -70,39 +67,82 @@
 </template>
 
 <script>
-import { Getyear, Edityear } from '@/api/year'
+import { Getsemester, Editsemester } from '@/api/year'
 export default {
   data() {
     return {
       tableData: [
-      ]
+      ],
+      input: ''
     }
   },
   created() {
     this.getallyear()
   },
   methods: {
-    // 获取所有年份信息
+    // 获取所有的学期信息
     getallyear() {
-      Getyear().then(result => {
-        // console.log('获取素有年份')
-        // console.log(result)
+      Getsemester().then(result => {
+        console.log(result)
         this.tableData = result.data
-        this.tableData = this.tableData.map(e => {
-          e.createTime = e.createTime.replace('T', ' ')
-          return e
-        })
       }).catch(Response => {
-        console.log(Response)
+        // console.log(Response)
+        this.$message({
+          message: '获取列表失败',
+          type: 'error'
+        })
       })
     },
-    // 修改学年状态
-    edityear(id) {
-      Edityear().then(result => {
-        console.log(result)
+    // 点击启用后的
+    clickEnable(index, row) {
+      console.log('这里是我的row数据')
+      if (row.state === true) {
+        this.$message({
+          message: '此学期已经是开启状态了(● u ●)',
+          type: 'info'
+        })
+        return
+      }
+
+      Editsemester(row.id).then(result => {
+        this.$message({
+          message: '启用成功',
+          type: 'success'
+        })
+        this.this.tableData[index].state = true
       }).catch(Response => {
-        console.log(Response)
+        this.$message({
+          message: '启用失败！',
+          type: 'error'
+        })
       })
+    },
+    // 点击禁用后的
+    clickDisable(index, row) {
+      if (row.state === false) {
+        this.$message({
+          message: '已经是禁用状态了',
+          type: 'info'
+        })
+        return
+      }
+
+      Editsemester(row.id).then(result => {
+        this.$message({
+          message: '禁用成功！',
+          type: 'success'
+        })
+        this.tableData[index].state = false
+      }).catch(Response => {
+        this.$message({
+          message: '修改失败',
+          type: 'error'
+        })
+      })
+    },
+    // 点击添加学年的事件
+    onadd() {
+
     },
     // 确定状态文本
     switchStateLable(row) {
@@ -126,67 +166,18 @@ export default {
         default:
           return 'info'
       }
-    },
-    // 点击启用后的事件
-    clickEnable(index, row) {
-      // 判断当前状态是否冲突
-      if (row.state === true) {
-        // 如果已经是启用后的状态了就是提醒用户
-        this.$message({
-          message: '此活动已经是启用后的状态了！(●◡●)',
-          type: 'infi'
-        })
-        return
-      }
-      // 修改操作
-      Edityear(row.id).then(reuslt => {
-        this.$message({
-          message: '启用成功！',
-          type: 'success'
-        })
-        this.tableData[index].state = true
-      }).catch(Response => {
-        this.$message({
-          message: '发生错误！！',
-          type: 'error'
-        })
-      })
-    },
-    // 点击禁用后的事件
-    clickDisable(index, row) {
-      // 判断当前状态是否冲突
-      if (row.state === false) {
-        this.$message({
-          message: '当前已经是禁用状态(●-●)',
-          type: 'info'
-        })
-        return
-      }
-      console.log(row.id)
-      Edityear(row.id).then(result => {
-        this.$message({
-          message: '禁用成功！',
-          type: 'success'
-        })
-        this.tableData[index].state = false
-      }).catch(Response => {
-        this.$message({
-          message: '发生错误',
-          type: 'error'
-        })
-      })
     }
   }
 }
 </script>
 
-<style>
+  <style>
 
-.mybox{
-    padding: 10px;
-}
-.mybox-top{
-  padding-bottom: 10px;
-}
-</style>
+  .mybox{
+      padding: 10px;
+  }
+  .mybox-top{
+    padding-bottom: 10px;
+  }
+  </style>
 
