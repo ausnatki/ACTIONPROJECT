@@ -13,12 +13,12 @@
           <el-button type="success" icon="el-icon-edit" @click="onadd">添加用户</el-button>
         </el-col>
         <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
-          <el-select v-model="value" placeholder="筛选入学年份">
+          <el-select v-model="serchyear" placeholder="筛选入学年份">
             <el-option
               v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.id"
+              :label="item.stageName"
+              :value="item.id"
             />
           </el-select>
         </el-col>
@@ -30,11 +30,12 @@
     </div>
 
     <!-- 我的用户添加弹出层 -->
-    <addUser :addflage.sync="addflage" />
+    <addUser :addflage.sync="addflage" :yearlist="options" />
   </div>
 </template>
 
 <script>
+import { addInit } from '@/api/user'
 import userTable from './components/list.vue'
 import addUser from './components/adduser.vue'
 export default {
@@ -46,29 +47,33 @@ export default {
   data() {
     return {
       input: '',
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: '',
+      options: [],
+      serchyear: '',
       addflage: false
     }
+  },
+  created() {
+    this.getinit()
   },
   methods: {
     onadd() {
       this.addflage = true
+    },
+    // 获取一些初始化数据
+    getinit() {
+      console.log('这里是我的初始化操作')
+      addInit().then(result => {
+        // console.log(result)
+        const filteredResults = result.data
+          .map(e => {
+            return e
+          })
+          .filter(e => e.state !== false)
+
+        this.options = filteredResults
+      }).catch(error => {
+        console.log(error)
+      })
     }
   }
 }

@@ -105,12 +105,14 @@ export default {
       }
 
       Editsemester(row.id).then(result => {
+        console.log('进入了这里的启用状态')
         this.$message({
           message: '启用成功',
           type: 'success'
         })
-        this.this.tableData[index].state = true
+        this.tableData[index].state = true
       }).catch(Response => {
+        console.log('进入了这里的启用失败状态')
         this.$message({
           message: '启用失败！',
           type: 'error'

@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       style="width: 100%"
@@ -120,7 +121,8 @@ export default {
         zip: 200333
       }],
       aid: '',
-      tempEditflage: false
+      tempEditflage: false,
+      loading: true
     }
   },
   watch: {
@@ -134,12 +136,19 @@ export default {
       this.tempEditflage = newVal
     }
   },
+  mounted() {
+    this.initTable()
+  },
   methods: {
     // 编辑事件
     handleClick(row) {
       // row.id目前是我的活动id
       this.tempEditflage = true
       this.aid = row.id
+    },
+    // 初始化表格事件
+    initTable() {
+      this.loading = false
     }
   }
 }

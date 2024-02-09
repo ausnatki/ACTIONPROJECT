@@ -1,19 +1,24 @@
 <template>
   <div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       style="width: 100%"
     >
       <el-table-column
-        prop="id"
         label="编号"
         sortable
+        prop="uid"
         width="80"
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.$index+1 }}
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="user"
-        label="用户名"
+        prop="studeid"
+        label="学生学号"
       />
       <el-table-column
         prop="name"
@@ -24,9 +29,19 @@
         label="联系电话"
       />
       <el-table-column
-        prop="college"
+        prop="faculties"
         label="所属院系"
       />
+      <el-table-column
+        prop="sex"
+        label="学生性别"
+      >
+        <template slot-scope="scope">
+          <!-- {{ scope.row.sex===true?'男':'女' }} -->
+          <el-tag :type="scope.row.sex === true ? '' : 'danger'">{{ scope.row.sex===true?'男':'女' }}</el-tag>
+
+        </template>
+      </el-table-column>
       <el-table-column
         label="状态"
       >
@@ -35,7 +50,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="startTime"
+        prop="year"
         label="入学年份"
       />
       <el-table-column label="操作">
@@ -58,12 +73,13 @@
     <edit
       v-if="flagerc"
       :dialogflag.sync="flagerc"
-      :userid="tempuser"
+      :tempeditinit="tempeditinit"
     />
   </div>
 </template>
 
 <script>
+import { getall } from '@/api/user'
 import edit from '@/views/user/edit.vue'
 export default {
   name: 'UserTable',
@@ -74,38 +90,18 @@ export default {
     return {
       flagerc: false, // 这个标志是管理比赛的
       tempuser: 1,
-      tableData: [{
-        id: 1,
-        user: '219970306',
-        name: '帅小伙',
-        college: '软件学院',
-        iphone: '18581348911',
-        startTime: '2021',
-        state: 1
-      },
-      {
-        id: 2,
-        user: '219970306',
-        name: '帅小伙',
-        college: '建筑学院',
-        iphone: '18581348911',
-        startTime: '2021',
-        state: 1
-      },
-      {
-        id: 3,
-        user: '219970306',
-        name: '帅小伙',
-        college: '通信学院',
-        iphone: '18581348911',
-        startTime: '2021',
-        state: 2
-      }]
+      tableData: [],
+      loading: true,
+      tempeditinit: ''// 这里的东西指的是我传入编辑时的数据
     }
+  },
+  created() {
+    this.initlist()
   },
   methods: {
     handleEdit(index, row) {
       console.log(index, row)
+      this.tempeditinit = row
       this.tempuser = row.id
       this.flagerc = true
     },
@@ -114,9 +110,9 @@ export default {
     },
     switchtype(row) {
       switch (row.state) {
-        case 1:
+        case true:
           return 'success'
-        case 2:
+        case false:
           return 'danger'
         default:
           return 'info'
@@ -124,13 +120,23 @@ export default {
     },
     switchcontent(row) {
       switch (row.state) {
-        case 1:
+        case true:
           return '正常状态'
-        case 2:
+        case false:
           return '禁用状态'
         default:
           return '位置状态'
       }
+    },
+    // 获取列表信息
+    initlist() {
+      getall().then(result => {
+        console.log(result)
+        this.tableData = result.data
+        this.loading = false
+      }).catch(error => {
+        console.log(error)
+      })
     }
   }
 }

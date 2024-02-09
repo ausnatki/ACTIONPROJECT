@@ -102,7 +102,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: true,
       options: [{
         value: 'HTML',
         label: 'HTML'
@@ -124,6 +124,9 @@ export default {
     addflage(newVal) {
       this.tempAddflage = newVal
     }
+  },
+  mounted() {
+    this.loading = false
   },
   methods: {
     ClickAdd() {

@@ -7,19 +7,19 @@
           <!-- 左侧第一个小块 -->
           <div style="height: 50px;  margin:20px 0 40px 0;">
             <el-form-item label="学生姓名">
-              <el-input v-model="name" />
+              <el-input v-model="form.name" />
             </el-form-item>
           </div>
           <!-- 左侧第二个小块 -->
           <div style="height: 50px;  margin:0 0 40px 0">
             <el-form-item label="学生性别">
-              <el-input v-model="sex" />
+              <el-input v-model="form.sex" />
             </el-form-item>
           </div>
           <!-- 左侧第三个小块 -->
           <div style="height: 50px;  margin:0 0 0 0">
             <el-form-item label="行政年纪">
-              <el-input v-model="start" />
+              <el-input v-model="form.start" />
             </el-form-item>
           </div>
         </el-col>
@@ -27,7 +27,7 @@
         <!-- 右边一个大图片块，占用三分之一的宽度 -->
         <el-col :span="7">
           <img
-            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+            :src="`/api/Tool/${form.Imp}`"
             class="image"
             style="width: 100%;height: 260px;"
           >
@@ -38,12 +38,13 @@
         <el-col>
           <div style="margin-top: 20px; height: 50px;">
             <el-form-item label="联系电话">
-              <el-input v-model="start" />
+              <el-input v-model="form.iphone" />
             </el-form-item>
           </div>
         </el-col>
       </el-row>
 
+      <!-- 这里是我的表格部分 -->
       <el-row>
         <el-col>
           <el-table
@@ -91,9 +92,9 @@
       </el-row>
 
       <el-row :gutter="10" style="margin-top: 15px;">
-        <el-col :span="4"><el-button type="primary">赋予权限</el-button></el-col>
+        <el-col :span="4"><el-button type="primary">确认修改</el-button></el-col>
 
-        <el-col :span="4"><el-button type="danger">撤销权限</el-button></el-col>
+        <el-col :span="4"><el-button type="danger">取消</el-button></el-col>
       </el-row>
 
     </el-form>
@@ -101,58 +102,57 @@
 </template>
 
 <script>
+// import { fromTextArea } from 'codemirror'
+import { getInitTable } from '@/api/user'
+
 export default {
   name: 'Details',
   props: {
-    userid: {
-      type: [Number, String],
+    initdata: {
+      type: [String, Array, Object],
+      required: true
+    },
+    loadding: {
+      type: Boolean,
       required: true
     }
   },
   data() {
     return {
-      tableData: [{
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 100,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      }]
+      tableData: [],
+      form: {
+        name: this.initdata.name,
+        sex: this.initdata.sex === true ? '男' : '女',
+        start: this.initdata.year,
+        iphone: this.initdata.iphone,
+        Imp: this.initdata.img
+      }
+    }
+  },
+  watch: {
+    initdata(newVal) {
+      this.name = newVal.name
+      this.sex = newVal.sex === true ? '男' : '女'
+      this.start = newVal.start
+      this.iphone = this.initdata.iphone
+      this.Imp = this.initdata.img
+    }
+  },
+  created() {
+    this.init()
+  },
+  methods: {
+    init() {
+      console.log('已经开始初始化了')
+
+      getInitTable(this.initdata.uid).then()
+
+      this.name = this.initdata.name
+      this.sex = this.initdata.sex
+      this.start = this.initdata.start
+      this.iphone = this.initdata.iphone
+      this.Imp = this.initdata.img
+      this.$emit('update:loadding', false)
     }
   }
 }
