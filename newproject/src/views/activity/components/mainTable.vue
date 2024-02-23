@@ -12,54 +12,81 @@
         label="编号"
         sortable
         width="75"
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.$index+1 }}
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="name"
+        prop="initiatingUnit"
         label="发起单位"
         width="120"
       />
       <el-table-column
-        prop="name"
+        prop="organizerName"
         label="发起人姓名"
         width="120"
       />
       <el-table-column
-        prop="province"
+        prop="activityAppStartTime"
         label="活动申请开始时间"
-        width="150"
-      />
+        width="160"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.activityAppStartTime.replace('T',' ') }}
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="city"
+        prop="activityAppEndTime"
         label="活动申请结束时间"
-        width="150"
-      />
+        width="160"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.activityAppEndTime.replace('T',' ') }}
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="city"
+        prop="activityStartTime"
         label="活动开始时间"
-        width="150"
-      />
+        width="160"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.activityStartTime.replace('T',' ') }}
+        </template>
+      </el-table-column>
+
       <el-table-column
         prop="zip"
         label="活动状态"
         width="120"
-      />
+      >
+        <template slot-scope="scope">
+          <el-tag
+            :type="actionStateType(scope.row)"
+            effect="dark"
+          >
+            {{ actionStateText(scope.row) }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="address"
+        prop="eventDescription"
         label="活动介绍"
         width="300"
+        show-overflow-tooltip="true"
       />
       <el-table-column
-        prop="zip"
+        prop="academicYear"
         label="活动学年"
         width="120"
       />
       <el-table-column
-        prop="zip"
-        label="学识"
+        prop="durationHours"
+        label="学时"
         width="120"
       />
       <el-table-column
-        prop="zip"
+        prop="activityType"
         label="活动类别"
         width="120"
       />
@@ -69,7 +96,7 @@
         width="100"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          <el-button type="text" size="small" @click="handleClick(scope.$index,scope.row)">编辑</el-button>
           <el-button type="text" size="small">禁用</el-button>
         </template>
       </el-table-column>
@@ -78,6 +105,7 @@
 </template>
 
 <script>
+import { getallaction } from '@/api/action'
 export default {
   props: {
     editflage: {
@@ -91,35 +119,8 @@ export default {
   },
   data() {
     return {
-      tableData: [{
-        id: '1',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        id: '2',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1517 弄',
-        zip: 200333
-      }, {
-        id: '3',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1519 弄',
-        zip: 200333
-      }, {
-        id: '4',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1516 弄',
-        zip: 200333
-      }],
+      tableData: [],
+      initdata: [],
       aid: '',
       tempEditflage: false,
       loading: true
@@ -141,14 +142,107 @@ export default {
   },
   methods: {
     // 编辑事件
-    handleClick(row) {
+    handleClick(index, row) {
       // row.id目前是我的活动id
       this.tempEditflage = true
       this.aid = row.id
+      this.$emit('transmit', this.initdata[index])
     },
     // 初始化表格事件
     initTable() {
+      getallaction().then(result => {
+        console.log(result)
+        this.tableData = result.list.map(function(item) {
+          return item.c
+        })
+        this.initdata = result.list
+      }).catch(Response => {
+        console.log('初始化失败')
+        console.log(Response)
+        return
+      })
       this.loading = false
+    },
+    // 活动状态 标签样式确定
+    actionStateType(row) {
+      let flag = 0
+      const nowTime = new Date()
+      const appStartTime = new Date(row.activityAppStartTime)
+      const appEndTime = new Date(row.activityAppEndTime)
+      const activityEndTime = new Date(row.activityEndTime)
+
+      // 活动未开始申请时的判断
+      if (nowTime < appStartTime) flag = 1
+
+      // 活动申请开始但未结束时候的判断
+      if (nowTime > appStartTime && nowTime < appEndTime) {
+        flag = 2
+      }
+
+      // 活动开始但未结束时候的判断
+      if (nowTime > appEndTime && nowTime < activityEndTime) {
+        flag = 3
+      }
+
+      // 活动结束时候的判断
+      if (nowTime > activityEndTime) {
+        flag = 4
+      }
+
+      // 返回相应的状态
+      switch (flag) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'info'
+        case 2:
+          return ''
+        case 3:
+          return 'success'
+        case 4:
+          return 'danger'
+      }
+    },
+    // 活动状态 文本确定
+    actionStateText(row) {
+      let flag = 0
+      const nowTime = new Date()
+      const appStartTime = new Date(row.activityAppStartTime)
+      const appEndTime = new Date(row.activityAppEndTime)
+      const activityEndTime = new Date(row.activityEndTime)
+
+      // 活动未开始申请时的判断
+      if (nowTime < appStartTime) flag = 1
+
+      // 活动申请开始但未结束时候的判断
+      if (nowTime > appStartTime && nowTime < appEndTime) {
+        flag = 2
+      }
+
+      // 活动开始但未结束时候的判断
+      if (nowTime > appEndTime && nowTime < activityEndTime) {
+        flag = 3
+      }
+
+      // 活动结束时候的判断
+      if (nowTime > activityEndTime) {
+        flag = 4
+      }
+
+      // 0:未知 1：活动申请未开时 2：活动申请开始但未结束
+      // 3:活动开始但没有结束 4：活动结束
+      switch (flag) {
+        case 0:
+          return '未知状态'
+        case 1 :
+          return '即将开启'
+        case 2 :
+          return '活动报名'
+        case 3:
+          return '活动开始'
+        case 4:
+          return '活动结束'
+      }
     }
   }
 }

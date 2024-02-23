@@ -55,11 +55,11 @@
 
         <el-form-item label="活动图片">
           <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="/api/Tool/imgupload"
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
-            @success="imgafter"
+            :on-success="imgafter"
           >
             <!-- 这里是启用多张图片的效果如果需要就将这个复制到上面就行   :multiple="true"-->
             <i class="el-icon-plus" />
@@ -106,12 +106,12 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="活动开始时间">
-              <el-date-picker v-model="form.activityStartDate" type="datetime" />
+              <el-date-picker v-model="form.ActivityStartTime" type="datetime" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="活动结束时间">
-              <el-date-picker v-model="form.activityEndDate" type="datetime" />
+              <el-date-picker v-model="form.ActivityEndTime" type="datetime" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -231,6 +231,33 @@ export default {
         EventImages: '', // 活动图片
         Createtime: new Date() // 创建时间，默认为当前时间
       },
+      // 这个临时数据是用来存储初始化数据的
+      tempform: {
+        ActivityName: '', // 活动名称
+        ActivityType: '', // 活动属性
+        OrganizerPhoneNumber: '', // 发起者电话
+        OrganizerEmployeeID: '', // 发起者学工号
+        OrganizerName: '', // 发起者姓名
+        InitiatingUnit: '', // 发起单位
+        TargetedGrade: [], // 面向年级
+        IsClubActivity: false, // 是否为社团活动，默认为false
+        TargetedCollege: [], // 面向学院
+        ActivityAppStartTime: new Date(), // 活动申请开始时间，默认为当前时间
+        ActivityAppEndTime: new Date(), // 活动申请结束时间，默认为当前时间
+        ActivityStartTime: '', // 活动开始时间，默认为当前时间
+        ActivityEndTime: '', // 活动结束时间，默认为当前时间
+        ActivityCycle: '', // 活动期数，默认为0表示未设置
+        AcademicYear: '', // 活动学年，默认为0表示未设置
+        AcademicSemester: '', // 活动学期，默认为0表示未设置
+        DurationHours: '', // 学时，默认为0表示未设置
+        VideoLink: '', // 视频连接
+        TargetedAudience: '', // 面向群体
+        EventLocation: '', // 活动地点
+        EventDescription: '', // 活动介绍
+        Notes: '', // 注意事项
+        EventImages: '', // 活动图片
+        Createtime: new Date() // 创建时间，默认为当前时间
+      },
       dialogImageUrl: '',
       dialogVisible: false,
       disabled: false,
@@ -266,6 +293,8 @@ export default {
       this.form.EventImages = ''
     },
     handlePictureCardPreview(file) {
+      console.log('这里是我的图片上传功能')
+      console.log(file)
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
@@ -275,7 +304,7 @@ export default {
     // 获取我添加时候的初始化信息
     Getinit() {
       // console.log(this.uid)
-      console.log('成功进入初始化事件')
+      // console.log('成功进入初始化事件')
       getInitadd(this.uid).then(result => {
         console.log(result)
         this.form.OrganizerEmployeeID = result.list[0].people.code
@@ -305,11 +334,21 @@ export default {
           })
         })
       })
+
+      setTimeout(() => {
+        this.dialogFormVisible = false
+      }, 1000)
+      // 添加完毕后关闭弹出层并且充值表格数据
     },
     // 上传文件之后
     imgafter(Response) {
-      console.log(Response)
-      this.form.EventImages = Response
+      console.log('这里是上传文件后的事件')
+      this.form.EventImages = Response.data.url
+    },
+    // 重置表单信息
+    resetForm() {
+      console.log('这里是重置表单事件')
+      this.form = this.tempform
     }
   }
 }

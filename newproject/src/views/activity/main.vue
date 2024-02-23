@@ -5,11 +5,11 @@
       <Top :addflage.sync="addFlage" />
     </div>
     <div class="content">
-      <Table :editflage.sync="editFlage" :activityid.sync="activityid" />
+      <Table :editflage.sync="editFlage" :activityid.sync="activityid" @transmit="geteditdata" />
     </div>
     <!-- 这里是我的两个弹出层的放置位置 -->
     <Add :flage.sync="addFlage" style="width: 800px;" />
-    <Edit :flage.sync="editFlage" :activityid="activityid" />
+    <Edit :flage.sync="editFlage" :activityid="activityid" :initdata="initdata" />
   </div>
 </template>
 
@@ -29,7 +29,14 @@ export default {
     return {
       addFlage: false,
       editFlage: false,
-      activityid: 1
+      activityid: 1,
+      initdata: ''
+    }
+  },
+  methods: {
+    geteditdata(data) {
+      console.log('进入初始化赋值阶段')
+      this.initdata = data
     }
   }
 
