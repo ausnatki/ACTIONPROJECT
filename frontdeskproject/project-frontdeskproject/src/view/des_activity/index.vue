@@ -1,33 +1,33 @@
 <template>
-    <div>
+    <div v-if="data && data.action">
         <!-- 这里是我的头部的左边部分 -->
         <div class="header">
-            <span>Health Japanese Fried Rice</span>
+            <span >{{ data.action.activityName }}</span>
             <div class="headerbox">
                 <div class="headerbox-one">
-                    <span>测试名称</span>
-                    <span>18581348911</span>
+                    <span style="display: block;">{{ data.userinfo.name }}</span>
+                    <span>{{ data.action.organizerPhoneNumber }}</span>
                     <img src="./assets/Ellipse2.png" />
                 </div>
                 <div class="headerline"></div>
                 <div class="headerbox-two">
                     <img src="./assets/Timer.png" alt="">
                     <div class="textbox">
-                        <span>剩余时间</span>
-                        <span> 30 minutes</span>
+                        <span >剩余时间：</span>
+                        <span> {{ timeinit(data.action.activityAppEndTime) }} minutes</span>
                     </div>
                 </div>
             </div>
         </div>
         <!-- 这里是我两个按钮的位置 -->
-        <div class="submitone">
+        <div class="submitone" @click="clickApplication">
             <div class="submitonebox">
                 <img src="./assets/print.png" alt="">
             </div>
 
             <span>报名</span>
         </div>
-        <div class="submittwo">
+        <div class="submittwo" @click="clickquash">
             <div class="submittwobox">
                 <img src="./assets/dowm.png" alt="">
             </div>
@@ -37,35 +37,40 @@
 
         <!-- 这里是我的大图片位置 -->
         <div class="boximg">
-            <img src="./assets/VCG211256078997.jpg" style="width: 100%; height: 100%;  border-radius: 25px;" alt="">
+            <img :src="`https://localhost:7138/api/Tool/`+data.action.eventImages" style="width: 100%; height: 100%;  border-radius: 25px;" alt="">
         </div>
 
         <!-- 这里是我图片的列表位置 -->
         <div class="listbox">
-            <div class="boxlist-title">Nutrition Information</div>
+            <div class="boxlist-title">活动 相关信息</div>
             <div class="boxlist">
                 <span>名称：</span>
-                <span>测试名称</span>
+                <span>{{ data.action.activityName }}</span>
             </div>
 
             <div class="boxlist">
                 <span>类别：</span>
-                <span>A类活动</span>
+                <span>{{data.action.activityType}}类活动</span>
             </div>
 
             <div class="boxlist">
                 <span>时间：</span>
-                <span>2023/12/10 12：20</span>
+                <span>{{ data.action.activityStartTime.replace('T', ' ') }}</span>
             </div>
 
             <div class="boxlist">
                 <span>活动地点：</span>
-                <span>六教202</span>
+                <span>{{ data.action.eventLocation }}</span>
+            </div>
+
+            <div class="boxlist">
+                <span>发起人：</span>
+                <span>{{data.userinfo.name}}</span>
             </div>
 
             <div class="boxlist">
                 <span>发起人电话：</span>
-                <span>18581348911</span>
+                <span>{{data.action.organizerPhoneNumber}}</span>
             </div>
 
             <div class="boxlist-bottom">adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -80,8 +85,104 @@
 </template>
 
 <script>
+import {Application,ActionQuash} from '@/network/api/action.js'
+import { mapState } from 'vuex'; // 导入 mapState
+
 export default {
-    name: 'DesPage'
+    name: 'DesPage',
+    data(){
+        return{
+            data:''
+        }
+    },
+    mounted() {
+        // 获取路由参数中的 id      
+        if(this.$route.params.action !== undefined){
+            const action = this.$route.params.action;
+            window.localStorage.setItem('reportId', action);
+            this.data = action
+        }
+        else {
+            const action = window.localStorage.getItem('reportId');
+            this.data = action
+        }
+
+    },
+    computed: {
+    ...mapState(['userInfo']), // 映射 Vuex 中的 userInfo 到组件的 computed 属性中
+  } ,
+    methods:{
+         timeinit(time) {
+
+            console.log(time)
+            // 将时间字符串转换为日期时间对象
+            var yourTime = new Date(time);
+
+            // 获取当前时间
+            var currentTime = new Date();
+
+            // 计算时间差（毫秒）
+            var timeDifference = yourTime - currentTime;
+
+            // 将时间差转换为分钟
+            var timeDifferenceMinutes = Math.floor(timeDifference / (1000 * 60));
+           
+            // 判断是否是为负数
+            if (timeDifferenceMinutes < 0) timeDifferenceMinutes = 0
+            return timeDifferenceMinutes
+        },
+        clickApplication(){
+            console.log('已经进入了报名的事件中')
+            // 这里会传入一个活动id和用户id
+            const uid = this.$store.state.auth.userInfo.uid
+            const aid = this.data.action.id
+            Application(uid,aid).then(result=>{
+                console.log(result)
+                if(result.result.success===true){
+                this.$message({
+                    type:'success',
+                    message:'报名成功'
+                })
+                return
+            }else{
+                    console.log(result.result.message)
+                    this.$message({
+                        type:'warning',
+                        message:result.result.message
+                    })
+                }
+            }).catch(Response=>{
+                console.error(Response)
+                this.$message({
+                    type:'error',
+                    message:'服务器发生错误'
+                })
+            })
+        },
+        clickquash(){
+            const uid = this.$store.state.auth.userInfo.uid
+            const aid = this.data.action.id
+            ActionQuash(uid,aid).then(result=>{
+                if(result.result.success===false){
+                this.$message({
+                    type:'warning',
+                    message:result.result.message
+                }) 
+                return
+                }else{
+                    this.$message({
+                        type:'success',
+                        message:result.result.message
+                    })
+                }
+            }).catch(Response=>{
+                this.$message({
+                    type:'error',
+                    message:Response.message
+                })
+            })
+        }
+    }
 }
 </script>
 
@@ -377,7 +478,7 @@ export default {
     text-align: center;
     align-self: flex-end;
     /* 将底部文本自身对齐到底部 */
-    margin-top:200px;
+    margin-top:150px;
     /* 使用自动外边距将底部文本推到底部 */
     text-align: center;
     /* 居中文本 */

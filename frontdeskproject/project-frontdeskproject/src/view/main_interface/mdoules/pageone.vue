@@ -97,6 +97,7 @@
     /* display: flex; */
     /* justify-content: space-between; */
     overflow: hidden;
+    /* transform: translateY(1%); */
   }
   
   .carousel-wrapper {

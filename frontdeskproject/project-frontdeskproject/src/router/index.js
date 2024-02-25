@@ -22,12 +22,14 @@ const routes = [
         {
             path:'main',
             name:'Main',
-            component:maininterface
+            component:maininterface,
+            props: true // 启用路由参数传递
         },
         {
           path:'despage',
           name:'DesPage',
-          component:despage
+          component:despage,
+          props: true // 启用路由参数传递
       }
     ],
   },
@@ -38,5 +40,12 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 });
+
+router.beforeEach((to, from, next) => {
+  // 在路由导航前将滚动位置设置为顶部
+  window.scrollTo(0, 0);
+  next();
+});
+
 
 export default router;

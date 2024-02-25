@@ -8,12 +8,12 @@
                 magna aliqut enim ad minim </span>
         </div>
         <div class="active-box">
-            <boxcard class="boxcard1" :action="actionlist[0]"></boxcard>
-            <boxcard class="boxcard2" :action="actionlist[1]"></boxcard>
-            <boxcard class="boxcard3" :action="actionlist[2]"></boxcard>
-            <boxcard class="boxcard4" :action="actionlist[3]"></boxcard>
-            <boxcard class="boxcard5" :action="actionlist[4]"></boxcard>
-            <boxcard class="boxcard6" :action="actionlist[5]"></boxcard>
+            <boxcard class="boxcard1" :action="actionlist[0]" ></boxcard>
+            <boxcard class="boxcard2" :action="actionlist[1]" ></boxcard>
+            <boxcard class="boxcard3" :action="actionlist[2]" ></boxcard>
+            <boxcard class="boxcard4" :action="actionlist[3]" ></boxcard>
+            <boxcard class="boxcard5" :action="actionlist[4]" ></boxcard>
+            <boxcard class="boxcard6" :action="actionlist[5]" ></boxcard>
         </div>
 
     </div>
@@ -31,6 +31,13 @@ export default {
     },
     components: {
         boxcard
+    },
+    methods: {
+        clickto(id) {
+            console.log(id)
+            // 或者在 JavaScript 中编程式导航
+            this.$router.push({ name: 'despage', params: { id: id } })
+        }
     }
 }
 </script>

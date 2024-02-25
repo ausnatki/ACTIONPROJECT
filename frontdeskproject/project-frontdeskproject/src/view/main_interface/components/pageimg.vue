@@ -103,9 +103,9 @@ export default {
 <style scope>
 .my-box {
     position: relative;
-    top: -130px;
+    top: -60px;
     left: 3%;
-    height: 620px;
+    height: 800px;
     width: 1280px;
     transform: scale(0.85);
 }

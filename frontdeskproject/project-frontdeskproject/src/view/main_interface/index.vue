@@ -49,5 +49,7 @@ created(){
 </script>
 
 <style scoped>
-
+  .pageimg{
+        /* transform: translateY(1%); */
+  }
 </style>

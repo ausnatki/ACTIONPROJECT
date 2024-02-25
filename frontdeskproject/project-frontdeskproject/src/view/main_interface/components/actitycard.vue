@@ -1,5 +1,5 @@
 <template>
-    <div class="cardbox">
+    <div class="cardbox" @click="change">
         <div class="cardboximg">
             <el-image
                     style="width: 100%; height: 100%"
@@ -31,7 +31,13 @@ export default {
             required:true
         }
     },
-    name: 'actity-card'
+    name: 'actity-card',
+    methods:{
+        change(){
+            const action = this.action
+            this.$router.push({ name: 'DesPage', params: { action: action } })
+        }
+    }
 }
 </script>
 
