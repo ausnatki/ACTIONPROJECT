@@ -52,10 +52,14 @@ export default {
     top: 1709px;
     bottom: 0px;
     border-radius: 30px;
-
     background: linear-gradient(180.00deg, rgba(231, 249, 253, 0), rgb(231, 249, 253) 100%);
+    transition: all 1s;
 }
 
+.cardbox:hover{
+
+background: linear-gradient(180.00deg, rgba(231, 249, 253, 0),rgb(145, 234, 254) 100%);
+}
 .cardboximg {
     /* image 26 */
     position: absolute;

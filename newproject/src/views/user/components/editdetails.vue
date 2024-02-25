@@ -126,7 +126,8 @@ export default {
         start: this.initdata.year,
         iphone: this.initdata.iphone,
         Imp: this.initdata.img
-      }
+      },
+      loading: true
     }
   },
   watch: {

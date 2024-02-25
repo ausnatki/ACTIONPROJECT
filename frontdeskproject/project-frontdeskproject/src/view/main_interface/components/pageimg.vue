@@ -2,7 +2,7 @@
     <div class="my-box">
         <!-- 这是我的左边部分 -->
         <div class="left">
-            <div class="left-button">
+            <div class="left-button letf-button-hover" @click="clickin">
                 <div class="letf-button-icon"></div>
                 <span> 活动详情 </span>
             </div>
@@ -40,7 +40,7 @@
                     <div class="left-bottom-usercard-time">15 March 2022</div>
                 </div>
 
-                <div class="left-bottom-button">
+                <div class="left-bottom-button" @click="clickin">
                     <span>点击进入详情</span>
                     <div class="left-bottom-button-icon"></div>
                 </div>
@@ -95,6 +95,10 @@ export default {
             // 判断是否是为负数
             if (timeDifferenceMinutes < 0) timeDifferenceMinutes = 0
             return timeDifferenceMinutes
+        },
+        clickin(){
+            const action = this.action
+            this.$router.push({ name: 'DesPage', params: { action: action } })
         }
     }
 }
@@ -103,7 +107,7 @@ export default {
 <style scope>
 .my-box {
     position: relative;
-    top: -60px;
+    top: -130px;
     left: 3%;
     height: 800px;
     width: 1280px;
@@ -134,10 +138,16 @@ export default {
     box-sizing: border-box;
     border: 1px solid rgb(0, 0, 0);
     border-radius: 30px;
-
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     background: rgb(255, 255, 255);
+    transition: all 1s;
 }
+
+.letf-button-hover:hover{
+    transition: all 1s;
+    transform: translateX(10px);
+}
+
 
 .letf-button-icon {
     /* image 14 */
@@ -166,6 +176,8 @@ export default {
     line-height: 17px;
     letter-spacing: -2%;
     text-align: left;
+    cursor: default;
+
 }
 
 .left-title {

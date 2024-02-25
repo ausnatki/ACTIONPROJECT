@@ -39,7 +39,7 @@ export default {
      }
      /* //解决空白的问题就是下面这段css */
       .page {
-         position: absolute;
+         /* position: absolute; */
          top: 0;
          bottom: 0;
          width: 100%;

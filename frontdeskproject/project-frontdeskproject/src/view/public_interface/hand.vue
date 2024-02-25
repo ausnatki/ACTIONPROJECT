@@ -9,17 +9,17 @@
             </el-col>
             <el-col :span="12">
                 <div class="grid-content navconter">
-                    <span class="navconter">活动主页</span>
-                    <span class="navconter">我的活动</span>
-                    <span class="navconter">活动列表</span>
-                    <span class="navconter">关于我们</span>
+                    <span class="navconter item1" @click="clickmainpage">活动主页</span>
+                    <span class="navconter item2">我的活动</span>
+                    <span class="navconter item3">活动列表</span>
+                    <span class="navconter item4">关于我们</span>
                 </div>
             </el-col>
                 <el-col :span="6">
                     <div class="grid-content">
                     <el-image
                         style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; position: absolute; top: 15px; right: 70px;"
-                        src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                        :src="`https://localhost:7138/api/Tool/`+userimg"
                         fit="fill">
                     </el-image>
                     </div>
@@ -30,21 +30,40 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'; // 导入 mapState
+
 export default {
-    name:'public-hand'
+    name:'public-hand',
+    computed: {
+    ...mapState(['userInfo']), // 映射 Vuex 中的 userInfo 到组件的 computed 属性中
+    },
+    data(){
+        return{
+            userimg:this.$store.state.auth.userInfo.imp
+        }
+    },
+    created(){
+        console.log(this.$store.state.auth.imp)
+    },
+    methods:{
+        clickmainpage(){
+            this.$router.push('/public/main');
+        }
+    }
 }
 </script>
 
-<style>
+<style scoped>
  .grid-content{
     /* background: gray; */
     height: 80px;
  }
-.navleft{
+ .navleft {
     position: absolute;
     left: 100px;
     top: 26px;
 }
+
 .navconter{
     height: 80px;
     color: rgb(0, 0, 0);
@@ -63,7 +82,28 @@ export default {
     order: 0;
     flex-grow: 0;
     padding: 0 32px;
+    transition: all 1s;
+    cursor: default;
 }
+
+.navconter:hover{
+    transition: all 1s;
+    /* transform: translate(0, -20px) ; */ 
+}
+
+.item1:hover {
+  transform: translateY(-5px); /* 鼠标悬停时文字上移 */
+}
+.item2:hover {
+  transform: translateY(-5px); /* 鼠标悬停时文字上移 */
+}
+.item3:hover {
+  transform: translateY(-5px); /* 鼠标悬停时文字上移 */
+}
+.item4:hover {
+  transform: translateY(-5px); /* 鼠标悬停时文字上移 */
+}
+
 
 .navbottm{
     left: 0;

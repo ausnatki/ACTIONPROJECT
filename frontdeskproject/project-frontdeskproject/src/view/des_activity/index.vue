@@ -222,6 +222,7 @@ export default {
     z-index: 999;
 }
 
+
 .headerbox-one span:first-child {
     /* your styles here */
     /* John Smith */
@@ -337,6 +338,24 @@ export default {
     right: 32px;
     top: 238px;
     bottom: 655px;
+    transition: all 1s;
+}
+.submitonebox{
+    transition: all 1s;
+}
+
+.submitonebox:hover{
+    transition: all 1s;
+    transform: rotate(180deg);
+}
+
+.submittwobox{
+    transition: all 1s;
+}
+
+.submittwobox:hover{
+    transition: all 1s;
+    transform: rotate(180deg);
 }
 
 .submitone>span {

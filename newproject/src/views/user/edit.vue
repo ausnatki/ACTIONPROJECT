@@ -86,6 +86,7 @@
                 <el-row>
                   <el-col>
                     <el-table
+                      v-loading="loading"
                       :data="tableData"
                       height="300px"
                       border
@@ -168,48 +169,7 @@ export default {
       dialogFormVisible: true,
       loading: true,
       currentDate: '2021-06-01',
-      tableData: [{
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 100,
-        cintegral: 70,
-        dintegral: 100
-      },
-      {
-        semester: '2021-2022 上半学期',
-        aintegral: 90,
-        bintegral: 80,
-        cintegral: 70,
-        dintegral: 100
-      }],
+      tableData: [],
       form: {
         name: '',
         sex: '',
@@ -244,20 +204,29 @@ export default {
       this.form.start = this.tempeditinit.year
       this.form.iphone = this.tempeditinit.iphone
       this.form.Imp = this.tempeditinit.img
+
+      // 在数据加载前将loading设置为true
+      this.loading = true
+
       // 表格方面的数据
-      getInitTable(this.tempeditinit.uid).then(result => {
-        this.tableData = result.data
-      }).catch(Response => {
-        console.error(Response.message)
-        this.$message({
-          message: '获取信息失败',
-          type: 'error'
+      getInitTable(this.tempeditinit.uid)
+        .then(result => {
+          this.tableData = result.data
+          // 在数据加载完成后将loading设置为false
+          this.loading = false
         })
-        return
-      })
-      this.loading = false
+        .catch(Response => {
+          console.error(Response.message)
+          this.$message({
+            message: '获取信息失败',
+            type: 'error'
+          })
+          // 在出现错误时也要将loading设置为false
+          this.loading = false
+        })
     }
   }
+
 }
 </script>
 

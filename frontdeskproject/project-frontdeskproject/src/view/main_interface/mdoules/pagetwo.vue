@@ -3,31 +3,31 @@
         <div class="title">
             <span>Categories</span>
         </div>
-        <div class="title-right">
+        <div class="title-right title-right-hover">
             <span>View All Categories</span>
         </div>
         <div class="imgbox">
             <div class="imgbox-item">
                 <div class="imgbox-imga"></div>
-                <div class="imgbox-text">
+                <div class="imgbox-text imgbox-text-hover">
                     <span>A类活动</span>
                 </div>
             </div>
             <div class="imgbox-item">
                 <div class="imgbox-imgb"></div>
-                <div class="imgbox-text">
+                <div class="imgbox-text imgbox-text-hover">
                     <span>B类活动</span>
                 </div>
             </div>
             <div class="imgbox-item">
                 <div class="imgbox-imgc"></div>
-                <div class="imgbox-text">
+                <div class="imgbox-text imgbox-text-hover">
                     <span>C类活动</span>
                 </div>
             </div>
             <div class="imgbox-item">
                 <div class="imgbox-imgd"></div>
-                <div class="imgbox-text">
+                <div class="imgbox-text imgbox-text-hover">
                     <span>D类活动</span>
                 </div>
             </div>
@@ -74,6 +74,7 @@ export default {
     letter-spacing: -4%;
     text-align: left;
     letter-spacing: -1%;
+    cursor: default;
 }
 
 .title-right {
@@ -88,7 +89,14 @@ export default {
     border-radius: 16px;
 
     background: rgb(231, 250, 254);
+    transition: all 0.3s;
 }
+
+.title-right-hover:hover{
+    transition: all 0.5s;
+   background: rgb(195, 240, 250);
+}
+
 
 .title-right span {
     position: absolute;
@@ -105,6 +113,7 @@ export default {
     line-height: 19px;
     letter-spacing: -2%;
     text-align: left;
+    cursor: default;
 }
 
 .imgbox {
@@ -122,6 +131,7 @@ export default {
     /* 水平居中 */
     flex-wrap: wrap;
     /* 自动换行 */
+    cursor: default;
 }
 
 .imgbox-item {
@@ -141,6 +151,11 @@ height: 152px;
 margin: 50px 0 0 0;
 border-radius: 30px;
 background: linear-gradient(180.00deg, rgba(240, 158, 0, 0),rgba(240, 158, 0, 0.1) 100%);
+transition: all 1s;
+}
+.imgbox-text-hover:hover{
+    transition: all 1s;
+    background: linear-gradient(180.00deg, rgba(3, 223, 248, 0) 6.797%,rgba(0, 203, 255, 0.35) 99.439%,rgba(78, 156, 176, 0.35) 100%);
 }
 
 .imgbox-text span{

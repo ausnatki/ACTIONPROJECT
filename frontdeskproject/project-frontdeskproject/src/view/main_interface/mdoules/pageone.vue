@@ -124,6 +124,7 @@
     position: absolute;
     /* width: 100%; */
     /* overflow: hidden; */
+    z-index: -99;
   }
   .carousel-right {
     /* flex: 0 0 calc(14.33% - 40px); */
@@ -131,6 +132,7 @@
     /* height: 100%; */
     width: 100%;
     overflow: hidden;
+    z-index: -99;
   }
   
   .carousel-middle {
