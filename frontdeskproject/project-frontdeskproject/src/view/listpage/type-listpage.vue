@@ -1,93 +1,119 @@
 <template>
-    <div class="mybox">
-    <el-table
-      :data="tableData"
-      style="width: 100%"
-      :row-class-name="tableRowClassName">
-      <el-table-column
-        prop="date"
-        label="编号"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="姓名"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="活动名"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="活动类别"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="活动分值"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="完成状态"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="地址">
-      </el-table-column>89 ,-0-89 
-    </el-table>
+  <div class="mybox">
+  <el-table
+    :data="tableData"
+    style="width: 100%"
+    :row-class-name="tableRowClassName">
+    <el-table-column
+      label="编号"
+     >
+      <template slot-scope="scope">
+        {{ scope.$index+1 }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="activityName"
+      label="活动名称"
+      >
+    </el-table-column>
+    <el-table-column
+      prop="eventDescription"
+      label="活动介绍"
+      >
+    </el-table-column>
+    <el-table-column
+      prop="academicYear"
+      label="活动人员数量"
+     >
+    </el-table-column>
+    <el-table-column
+      prop="activityStartTime"
+      label="活动开始时间"
+      >
+    </el-table-column>
+    <el-table-column
+      prop="activityEndTime"
+      label="活动结束时间"
+      >
+    </el-table-column>
+    <el-table-column
+      label="操作"
+     >
+     <template slot-scope="scope">
+        <el-link target="_blank" @click="clickto(scope.$index)">进入详情</el-link>
+     </template>
+    </el-table-column>
+  </el-table>
 </div>
-  </template>
-  
-  <style>
-    .el-table .warning-row {
-      background: oldlace;
+</template>
+<script>
+import { GetTypeList } from '@/network/api/action';
+export default {
+name: 'type-listpage',
+methods: {
+  tableRowClassName({ rowIndex }) {
+    if (rowIndex === 1) {
+      return 'warning-row';
+    } else if (rowIndex === 3) {
+      return 'success-row';
     }
-  
-    .el-table .success-row {
-      background: #f0f9eb;
-    }
-    .mybox{
-        padding: 5px;
-    }
-  </style>
-  
-  <script>
-    export default {
-      name:'type-listpage',
-      methods: {
-        tableRowClassName({rowIndex}) {
-          if (rowIndex === 1) {
-            return 'warning-row';
-          } else if (rowIndex === 3) {
-            return 'success-row';
-          }
-          return '';
-        }
-      },
-      data() {
-        return {
-          tableData: [{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄',
-          }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄',
-          }, {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }]
-        }
-      }
-    }
-  </script>
+    return '';
+  },
+  initdata(){
+    const type = this.$route.params.type;
+    GetTypeList(type).then(result=>{
+      this.action = result.data
+      this.tableData = this.action.map(item => item.action);
+    }).catch(()=>{
+      this.$message({
+        type:'error',
+        message:'发生错误服务器获取信息失败'
+      })
+    })
+  },
+  clickto(index){
+    const action = this.action[index]
+    this.$router.push({ name: 'DesPage', params: { action: action } })
+  }
+},
+data() {
+  return {
+    tableData: [{
+      date: '2016-05-02',
+      name: '王小虎',
+      address: '上海市普陀区金沙江路 1518 弄',
+    }, {
+      date: '2016-05-04',
+      name: '王小虎',
+      address: '上海市普陀区金沙江路 1518 弄'
+    }, {
+      date: '2016-05-01',
+      name: '王小虎',
+      address: '上海市普陀区金沙江路 1518 弄',
+    }, {
+      date: '2016-05-03',
+      name: '王小虎',
+      address: '上海市普陀区金沙江路 1518 弄'
+    }],
+    action:''
+  }
+},
+created(){
+  this.initdata()
+}
+}
+
+</script>
+
+<style>
+.el-table .warning-row {
+background: oldlace;
+}
+
+.el-table .success-row {
+background: #f0f9eb;
+}
+.mybox{
+  padding: 0px 10px 10px 10px ;
+}
+</style>

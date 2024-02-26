@@ -9,25 +9,25 @@
         <div class="imgbox">
             <div class="imgbox-item">
                 <div class="imgbox-imga"></div>
-                <div class="imgbox-text imgbox-text-hover" @click="Totype(A)">
+                <div class="imgbox-text imgbox-text-hover" @click="Totype('A')">
                     <span>A类活动</span>
                 </div>
             </div>
             <div class="imgbox-item">
                 <div class="imgbox-imgb"></div>
-                <div class="imgbox-text imgbox-text-hover" @click="Totype(B)">
+                <div class="imgbox-text imgbox-text-hover" @click="Totype('B')">
                     <span>B类活动</span>
                 </div>
             </div>
             <div class="imgbox-item">
                 <div class="imgbox-imgc"></div>
-                <div class="imgbox-text imgbox-text-hover" @click="Totype(C)">
+                <div class="imgbox-text imgbox-text-hover" @click="Totype('C')">
                     <span>C类活动</span>
                 </div>
             </div>
             <div class="imgbox-item">
                 <div class="imgbox-imgd"></div>
-                <div class="imgbox-text imgbox-text-hover" @click="Totype(D)">
+                <div class="imgbox-text imgbox-text-hover" @click="Totype('D')">
                     <span>D类活动</span>
                 </div>
             </div>

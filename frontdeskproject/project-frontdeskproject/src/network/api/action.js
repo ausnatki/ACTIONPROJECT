@@ -27,3 +27,28 @@ export function ActionQuash(uid,aid){
 }
 
 
+// 获取所有正在报名时间段的活动列表
+export function GetAllList(){
+    return request({
+        url:'/api/Action/GetAllList',
+        method:'get'
+    })
+}
+
+// 根据类别获取所有活动列表
+export function GetTypeList(type){
+    return request({
+        url:'/api/Action/GetTypeList',
+        method:'get',
+        params:{type}
+    })
+}
+
+// 用户自己的活动列表
+export function GetMyList(id){
+    return request({
+        url:'/api/Action/GetMyList',
+        method:'get',
+        params:{id}
+    })
+}

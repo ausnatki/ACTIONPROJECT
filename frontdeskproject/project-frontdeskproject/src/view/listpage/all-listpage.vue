@@ -5,89 +5,114 @@
       style="width: 100%"
       :row-class-name="tableRowClassName">
       <el-table-column
-        prop="date"
         label="编号"
-        width="180">
+       >
+        <template slot-scope="scope">
+          {{ scope.$index+1 }}
+        </template>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="activityName"
         label="活动名称"
-        width="180">
+        >
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="eventDescription"
         label="活动介绍"
-        width="180">
+        >
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="academicYear"
         label="活动人员数量"
-        width="180">
+       >
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="activityStartTime"
         label="活动开始时间"
-        width="180">
+        >
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="activityEndTime"
         label="活动结束时间"
-        width="180">
+        >
       </el-table-column>
       <el-table-column
-        prop="address"
-        label="操作">
+        label="操作"
+       >
+       <template slot-scope="scope">
+          <el-link target="_blank" @click="clickto(scope.$index)">进入详情</el-link>
+       </template>
       </el-table-column>
     </el-table>
 </div>
   </template>
-  
-  <style>
-    .el-table .warning-row {
-      background: oldlace;
-    }
-  
-    .el-table .success-row {
-      background: #f0f9eb;
-    }
-    .mybox{
-        padding: 5px;
-    }
-  </style>
-  
-  <script>
-    export default {
-      name:'all-listpage',
-      methods: {
-        tableRowClassName({rowIndex}) {
-          if (rowIndex === 1) {
-            return 'warning-row';
-          } else if (rowIndex === 3) {
-            return 'success-row';
-          }
-          return '';
-        }
-      },
-      data() {
-        return {
-          tableData: [{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄',
-          }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄',
-          }, {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }]
-        }
+<script>
+import { GetAllList } from '@/network/api/action';
+export default {
+  name: 'all-listpage',
+  methods: {
+    tableRowClassName({ rowIndex }) {
+      if (rowIndex === 1) {
+        return 'warning-row';
+      } else if (rowIndex === 3) {
+        return 'success-row';
       }
+      return '';
+    },
+    initdata(){
+      GetAllList().then(result=>{
+        this.action = result.data
+        this.tableData = this.action.map(item => item.action);
+      }).catch(()=>{
+        this.$message({
+          type:'error',
+          message:'发生错误服务器获取信息失败'
+        })
+      })
+    },
+    clickto(index){
+      const action = this.action[index]
+      this.$router.push({ name: 'DesPage', params: { action: action } })
     }
-  </script>
+  },
+  data() {
+    return {
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄',
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄',
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }],
+      action:''
+    }
+  },
+  created(){
+    this.initdata()
+  }
+}
+
+</script>
+
+<style>
+.el-table .warning-row {
+  background: oldlace;
+}
+
+.el-table .success-row {
+  background: #f0f9eb;
+}
+.mybox{
+    padding: 0px 10px 10px 10px ;
+}
+</style>
