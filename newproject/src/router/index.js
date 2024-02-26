@@ -247,7 +247,18 @@ export const asyncRoutes = [
       component: () => import('@/views/activity/main.vue'),
       name: 'activityList',
       meta: {
-        title: '用户列表',
+        title: '活动列表',
+        icon: 'guide',
+        noCache: true,
+        roles: ['admin']
+      }
+    }, {
+      path: 'Useraction/:id',
+      component: () => import('@/views/activity/moudls/useraction.vue'),
+      name: 'Useraction',
+      hidden: true,
+      meta: {
+        title: '活动报名信息',
         icon: 'guide',
         noCache: true,
         roles: ['admin']

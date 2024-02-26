@@ -56,6 +56,16 @@
       </el-table-column>
 
       <el-table-column
+        prop="activityEndTime"
+        label="活动开始时间"
+        width="160"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.activityEndTime.replace('T',' ') }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
         prop="zip"
         label="活动状态"
         width="120"
@@ -73,7 +83,7 @@
         prop="eventDescription"
         label="活动介绍"
         width="300"
-        show-overflow-tooltip="true"
+        :show-overflow-tooltip="true"
       />
       <el-table-column
         prop="academicYear"
@@ -93,11 +103,12 @@
       <el-table-column
         fixed="right"
         label="操作"
-        width="100"
+        width="120"
       >
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleClick(scope.$index,scope.row)">编辑</el-button>
-          <el-button type="text" size="small">禁用</el-button>
+          <el-button type="text" size="small" @click="clickmanage(scope.row.id)">管理</el-button>
+          <el-button type="text" size="small" @click="clickdel(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -105,7 +116,7 @@
 </template>
 
 <script>
-import { getallaction } from '@/api/action'
+import { getallaction, DelAction } from '@/api/action'
 export default {
   props: {
     editflage: {
@@ -150,6 +161,7 @@ export default {
     },
     // 初始化表格事件
     initTable() {
+      this.loading = true
       getallaction().then(result => {
         console.log(result)
         this.tableData = result.list.map(function(item) {
@@ -160,8 +172,9 @@ export default {
         console.log('初始化失败')
         console.log(Response)
         return
+      }).finally(() => {
+        this.loading = false // 确保在请求完成后将loading设置为false
       })
-      this.loading = false
     },
     // 活动状态 标签样式确定
     actionStateType(row) {
@@ -170,7 +183,7 @@ export default {
       const appStartTime = new Date(row.activityAppStartTime)
       const appEndTime = new Date(row.activityAppEndTime)
       const activityEndTime = new Date(row.activityEndTime)
-
+      const activityStartTime = new Date(row.activityStartTime)
       // 活动未开始申请时的判断
       if (nowTime < appStartTime) flag = 1
 
@@ -179,8 +192,12 @@ export default {
         flag = 2
       }
 
+      if (nowTime > appEndTime && nowTime < activityStartTime) {
+        flag = 5
+      }
+
       // 活动开始但未结束时候的判断
-      if (nowTime > appEndTime && nowTime < activityEndTime) {
+      if (nowTime > activityStartTime && nowTime < activityEndTime) {
         flag = 3
       }
 
@@ -201,6 +218,10 @@ export default {
           return 'success'
         case 4:
           return 'danger'
+        case 5:
+          return ''
+        default:
+          return 'warning'
       }
     },
     // 活动状态 文本确定
@@ -210,6 +231,7 @@ export default {
       const appStartTime = new Date(row.activityAppStartTime)
       const appEndTime = new Date(row.activityAppEndTime)
       const activityEndTime = new Date(row.activityEndTime)
+      const activityStartTime = new Date(row.activityStartTime)
 
       // 活动未开始申请时的判断
       if (nowTime < appStartTime) flag = 1
@@ -219,8 +241,12 @@ export default {
         flag = 2
       }
 
+      if (nowTime > appEndTime && nowTime < activityStartTime) {
+        flag = 5
+      }
+
       // 活动开始但未结束时候的判断
-      if (nowTime > appEndTime && nowTime < activityEndTime) {
+      if (nowTime > activityStartTime && nowTime < activityEndTime) {
         flag = 3
       }
 
@@ -242,7 +268,36 @@ export default {
           return '活动开始'
         case 4:
           return '活动结束'
+        case 5:
+          return '活动未开始'
+        default:
+          return '未知状态'
       }
+    },
+    // 管理的点击事件
+    clickmanage(id) {
+      console.log('进入到了管理界面' + id)
+      this.$router.push({ name: 'Useraction', params: { id: id }})
+    },
+    clickdel(id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        DelAction(id).then(result => {
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+        })
+        this.initTable()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }

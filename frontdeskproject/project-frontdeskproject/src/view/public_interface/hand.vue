@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mybox">
         <el-row>
             <el-col :span="6">
                 <div class="grid-content "> 
@@ -10,8 +10,8 @@
             <el-col :span="12">
                 <div class="grid-content navconter">
                     <span class="navconter item1" @click="clickmainpage">活动主页</span>
-                    <span class="navconter item2">我的活动</span>
-                    <span class="navconter item3">活动列表</span>
+                    <span class="navconter item2" @click="toMypath">我的活动</span>
+                    <span class="navconter item3" @click="ToAllList">活动列表</span>
                     <span class="navconter item4">关于我们</span>
                 </div>
             </el-col>
@@ -44,11 +44,29 @@ export default {
     },
     created(){
         console.log(this.$store.state.auth.imp)
+        
     },
     methods:{
         clickmainpage(){
-            this.$router.push('/public/main');
-        }
+            const currentPath = this.$router.currentRoute.path;
+            const newPath = `/public/main`;
+            if (currentPath !== newPath) {
+                this.$router.push(newPath);
+            }
+        },
+        toMypath(){
+            // this.$router.push({ name: 'mylistpage',params:{id:this.$store.state.auth.userInfo.uid} });
+            const currentPath = this.$router.currentRoute.path;
+            const newPath = `/public/MyListpage/${this.$store.state.auth.userInfo.uid}`;
+
+            if (currentPath !== newPath) {
+                this.$router.push(newPath);
+            }
+        },
+        ToAllList(){
+            // 在你的组件中
+            this.$router.push({ name: 'public.alllistpage' });
+        },
     }
 }
 </script>

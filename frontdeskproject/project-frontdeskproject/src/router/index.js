@@ -5,7 +5,9 @@ import PublicInterface from '@/view/public_interface/index.vue'; // 母版页组
 import Home from '@/view/login/index.vue'; // 具体页面组件
 import maininterface from '@/view/main_interface/index.vue' 
 import despage from '@/view/des_activity/index.vue'
-
+import AllListpage from '@/view/listpage/all-listpage.vue'
+import MyListpage from '@/view/listpage/my-listpage.vue'
+import TypeListpage from '@/view/listpage/type-listpage.vue'
 Vue.use(VueRouter);
 
 const routes = [
@@ -30,7 +32,25 @@ const routes = [
           name:'DesPage',
           component:despage,
           props: true // 启用路由参数传递
-      }
+        },
+        {
+          path:'AllListpage',
+          name:'alllistpage',
+          component:AllListpage,
+          props: true // 启用路由参数传递
+        },
+        {
+          path:'MyListpage/:id',
+          name:'mylistpage',
+          component:MyListpage,
+          props: true // 启用路由参数传递
+        },
+        {
+          path:'TypeListpage/:type',
+          name:'typelistpage',
+          component:TypeListpage,
+          props: true // 启用路由参数传递
+        }
     ],
   },
 ];

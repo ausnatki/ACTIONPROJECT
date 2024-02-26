@@ -3,31 +3,31 @@
         <div class="title">
             <span>Categories</span>
         </div>
-        <div class="title-right title-right-hover">
+        <div class="title-right title-right-hover" @click="ToAllList">
             <span>View All Categories</span>
         </div>
         <div class="imgbox">
             <div class="imgbox-item">
                 <div class="imgbox-imga"></div>
-                <div class="imgbox-text imgbox-text-hover">
+                <div class="imgbox-text imgbox-text-hover" @click="Totype(A)">
                     <span>A类活动</span>
                 </div>
             </div>
             <div class="imgbox-item">
                 <div class="imgbox-imgb"></div>
-                <div class="imgbox-text imgbox-text-hover">
+                <div class="imgbox-text imgbox-text-hover" @click="Totype(B)">
                     <span>B类活动</span>
                 </div>
             </div>
             <div class="imgbox-item">
                 <div class="imgbox-imgc"></div>
-                <div class="imgbox-text imgbox-text-hover">
+                <div class="imgbox-text imgbox-text-hover" @click="Totype(C)">
                     <span>C类活动</span>
                 </div>
             </div>
             <div class="imgbox-item">
                 <div class="imgbox-imgd"></div>
-                <div class="imgbox-text imgbox-text-hover">
+                <div class="imgbox-text imgbox-text-hover" @click="Totype(D)">
                     <span>D类活动</span>
                 </div>
             </div>
@@ -37,7 +37,17 @@
 
 <script>
 export default {
-    name: 'page-two'
+    name: 'page-two',
+    methods:{
+        ToAllList(){
+            // 在你的组件中
+        this.$router.push({ name: 'alllistpage' });
+        },
+        Totype(type){
+            this.$router.push({ name: 'typelistpage',params:{type:type} });
+        }
+
+    }
 }
 </script>
 
