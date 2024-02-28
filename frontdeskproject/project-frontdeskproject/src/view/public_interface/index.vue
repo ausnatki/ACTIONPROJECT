@@ -23,7 +23,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .slide-fade-enter-active,
   .slide-fade-leave-active
      {

@@ -16,7 +16,7 @@
                 </div>
             </el-col>
                 <el-col :span="6">
-                    <div class="grid-content">
+                    <div class="grid-content" @click="clickuserpage">
                     <el-image
                         style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; position: absolute; top: 15px; right: 70px;"
                         :src="`https://localhost:7138/api/Tool/`+userimg"
@@ -65,8 +65,24 @@ export default {
         },
         ToAllList(){
             // 在你的组件中
-            this.$router.push({ name: 'public.alllistpage' });
+           // this.$router.push({ name: 'mylistpage',params:{id:this.$store.state.auth.userInfo.uid} });
+           const currentPath = this.$router.currentRoute.path;
+            const newPath = `/public/AllListpage`;
+
+            if (currentPath !== newPath) {
+                this.$router.push(newPath);
+            }
         },
+        // 点击头像的事件
+        clickuserpage(){
+           // this.$router.push({ name: 'mylistpage',params:{id:this.$store.state.auth.userInfo.uid} });
+           const currentPath = this.$router.currentRoute.path;
+            const newPath = `/public/UserPage`;
+
+            if (currentPath !== newPath) {
+                this.$router.push(newPath);
+            }
+        }
     }
 }
 </script>

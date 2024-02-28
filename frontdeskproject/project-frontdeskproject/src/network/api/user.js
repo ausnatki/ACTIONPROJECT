@@ -23,3 +23,20 @@ export function getinfo(token){
     params: { token }
   })
 }
+
+export function GetUserinfo(id){
+  return request({
+    url:'/api/SysUser/GetFrontUserinfo',
+    method:'get',
+    params:{id}
+  })
+}
+
+// 修改功能
+export function edituser(user) {
+  return request({
+    url: '/api/SysUser/EditUser',
+    method: 'post',
+    data: user
+  })
+}

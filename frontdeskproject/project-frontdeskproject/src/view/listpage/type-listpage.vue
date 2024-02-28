@@ -52,9 +52,10 @@ export default {
 name: 'type-listpage',
 methods: {
   tableRowClassName({ rowIndex }) {
-    if (rowIndex === 1) {
+    
+    if (rowIndex%4 === 1) {
       return 'warning-row';
-    } else if (rowIndex === 3) {
+    } else if (rowIndex%4 === 3) {
       return 'success-row';
     }
     return '';
@@ -105,7 +106,7 @@ created(){
 
 </script>
 
-<style>
+<style scoped>
 .el-table .warning-row {
 background: oldlace;
 }

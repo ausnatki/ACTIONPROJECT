@@ -41,7 +41,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .cardbox {
     /* Rectangle 8 */
     position: absolute;

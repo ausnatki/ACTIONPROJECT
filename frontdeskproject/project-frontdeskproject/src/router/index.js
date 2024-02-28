@@ -8,6 +8,7 @@ import despage from '@/view/des_activity/index.vue'
 import AllListpage from '@/view/listpage/all-listpage.vue'
 import MyListpage from '@/view/listpage/my-listpage.vue'
 import TypeListpage from '@/view/listpage/type-listpage.vue'
+import UserPage from '@/view/user/main.vue'
 Vue.use(VueRouter);
 
 const routes = [
@@ -50,6 +51,12 @@ const routes = [
           name:'typelistpage',
           component:TypeListpage,
           props: true // 启用路由参数传递
+        },
+        {
+          path:'Userpage',
+          name:'userpage',
+          component:UserPage,
+          props: true // 启用路由参数传递
         }
     ],
   },
@@ -65,6 +72,7 @@ router.beforeEach((to, from, next) => {
   // 在路由导航前将滚动位置设置为顶部
   window.scrollTo(0, 0);
   next();
+  
 });
 
 
