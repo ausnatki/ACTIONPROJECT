@@ -61,3 +61,21 @@ export function DelAction(id) {
     params: { id }
   })
 }
+
+// 获取修改活时候的数据
+export function GetEditInit(id) {
+  return request({
+    url: '/api/Action/GetEditInit',
+    method: 'get',
+    params: { id }
+  })
+}
+
+// 活动修改
+export function EditAction(action) {
+  return request({
+    url: '/api/Action/EditAction',
+    method: 'post',
+    data: action
+  })
+}

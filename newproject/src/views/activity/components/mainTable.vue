@@ -191,12 +191,14 @@ export default {
   },
   watch: {
     tempEditflage(newVal) {
+      if (newVal === false) this.initTable()
       this.$emit('update:editflage', newVal)
     },
     aid(newVal) {
       this.$emit('update:activityid', newVal)
     },
     editflage(newVal) {
+      if (newVal === false) this.initTable()
       this.tempEditflage = newVal
     }
   },

@@ -23,7 +23,7 @@
           <el-col :span="12">
             <el-form-item label="活动名称">
               <el-input v-model="form.ActivityName" />
-              ..            </el-form-item>
+            </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="活动属性（活动类别）">
@@ -71,7 +71,7 @@
         </el-row>
         <el-form-item label="面向年级">
           <el-checkbox-group v-model="form.TargetedGrade">
-            <el-checkbox v-for="item in yearlist" :key="item.id" :label="item.id">{{ item.stageName }}</el-checkbox>
+            <el-checkbox v-for="item in yearlist" :key="item.id" :label="item.id" :checked="isGradeSelected(item.id)">{{ item.stageName }}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
 
@@ -84,11 +84,14 @@
 
         <el-form-item label="面向对象">
           <el-checkbox-group v-model="form.TargetedCollege">
-            <el-checkbox label="软件学院" />
+            <!-- <el-checkbox label="软件学院" />
             <el-checkbox label="管理学院" />
             <el-checkbox label="土木工程学院" />
-            <el-checkbox label="互联网学院" />
+            <el-checkbox label="互联网学院" /> -->
+            <el-checkbox v-for="college in colleges" :key="college.name" :label="college.name" :checked="isSelected(college.name)">{{ college.name }}</el-checkbox>
+
           </el-checkbox-group>
+
         </el-form-item>
 
         <el-row :gutter="24">
@@ -117,7 +120,7 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item label="招募人数">
-              <el-input-number v-model="form.recruitmentNumber" controls-position="right" :min="0" />
+              <el-input-number v-model="form.RecruitmentNumber" controls-position="right" :min="0" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -138,7 +141,6 @@
               <el-select v-model="form.AcademicYear" placeholder="请选择">
                 <!-- 在这里添加下拉框选项 -->
                 <el-option v-for="item in yearlist" :key="item.id" :label="item.stageName" :value="item.id" />
-
               </el-select>
             </el-form-item>
           </el-col>
@@ -182,7 +184,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="clickadd">确定</el-button>
+          <el-button type="primary" @click="clickedit()">确定</el-button>
           <el-button @click="resetForm">重置</el-button>
         </el-form-item>
       </el-form>
@@ -191,7 +193,7 @@
 </template>
 
 <script>
-import { getInitadd } from '@/api/action'
+import { getInitadd, EditAction } from '@/api/action'
 import { mapGetters } from 'vuex'
 export default {
   props: {
@@ -213,7 +215,7 @@ export default {
       dialogFormVisible: false,
       // 这个临时数据是用来存储初始化数据的
       form: {
-        recruitmentNumber: 12, // 活动人数，
+        RecruitmentNumber: '', // 活动人数，
         ActivityName: '', // 活动名称
         ActivityType: '', // 活动属性
         OrganizerPhoneNumber: '', // 发起者电话
@@ -240,7 +242,12 @@ export default {
         Createtime: new Date() // 创建时间，默认为当前时间
       },
       yearlist: {},
-
+      colleges: [
+        { 'name': '软件学院' },
+        { 'name': '管理学院' },
+        { 'name': '土木工程学院' },
+        { 'name': '互联网学院' }
+      ],
       formLabelWidth: '120px'
     }
   },
@@ -254,8 +261,9 @@ export default {
   // 监听子组件内部的 dialogFormVisible 变化
     dialogFormVisible(newVal) {
     // 向上传递关闭信息给父组件
+      // console.log('这是我的子组件重新加载')
+      // this.$forceUpdate()
       if (newVal === false) {
-        console.log('这是我子组建中的修改')
         this.$emit('update:flage', newVal)
       }
     },
@@ -270,10 +278,6 @@ export default {
     // this.init()
   },
   methods: {
-    // 点击确定后的事件
-    clickadd() {
-      console.log('确定后的事件')
-    },
     // 重置
     resetForm() {
       this.getInitaddinit()
@@ -293,16 +297,29 @@ export default {
           type: 'error'
         })
         return
+      }).finally(() => {
+        // 设置面向年级的多选框选中状态
+        if (this.initdata.yearlist) {
+          this.form.TargetedGrade = this.initdata.yearlist.map(grade => grade.yid)
+        }
+
+        // 设置面向学院的多选框选中状态
+        if (this.initdata.academylist) {
+          this.form.TargetedCollege = this.initdata.academylist.map(college => college.name)
+        }
       })
+
+      // GetEditInit(this.uid)
+      this.form.Id = this.activityid
       this.form.ActivityName = this.initdata.c.activityName
       this.form.ActivityType = this.initdata.c.activityType
       this.form.OrganizerPhoneNumber = this.initdata.c.organizerPhoneNumber
       this.form.OrganizerEmployeeID = this.initdata.c.organizerEmployeeID
       this.form.OrganizerName = this.initdata.c.organizerName
       this.form.InitiatingUnit = this.initdata.c.initiatingUnit
-      this.form.TargetedGrade = this.initdata.yearlist
+      this.form.TargetedGrade = []
       this.form.IsClubActivity = this.initdata.c.isClubActivity
-      this.form.TargetedCollege = this.initdata.academylist
+      this.form.TargetedCollege = []
       this.form.ActivityAppStartTime = this.initdata.c.activityAppStartTime
       this.form.ActivityAppEndTime = this.initdata.c.activityAppEndTime
       this.form.ActivityStartTime = this.initdata.c.activityStartTime
@@ -318,12 +335,38 @@ export default {
       this.form.Notes = this.initdata.c.notes
       this.form.EventImages = this.initdata.c.eventImages
       this.form.Createtime = this.initdata.c.createtime
-      console.log(this.form.notes)
-      console.log(this.form.eventDescription)
+      this.form.RecruitmentNumber = this.initdata.c.recruitmentNumber
     },
     imgSuccess(response) {
       console.log(response)
       this.form.EventImages = response.data.url
+    },
+    // 年份多选框的判断
+    isGradeSelected(yearId) {
+    // 检查年份列表中的年份是否在年级列表中存在，如果存在则返回 true，否则返回 false
+      if (this.initdata.yearlist) {
+        return this.initdata.yearlist.some(grade => grade.yid === yearId)
+      }
+    },
+    // 面像群体的多选框判断
+    isSelected(collegeName) {
+    // 检查给定的学院名称是否在给定的默认选中数据中存在，如果存在则返回 true，否则返回 false
+      if (this.initdata.academylist) {
+        return this.initdata.academylist.some(grade => grade.name === collegeName)
+      }
+    },
+    clickedit() {
+      EditAction(this.form).then(() => {
+        this.$message({
+          type: 'success',
+          message: '修改成功'
+        })
+      }).catch(response => {
+        this.$message({
+          type: 'error',
+          message: '服务器错误，修改失败'
+        })
+      })
     }
   }
 }

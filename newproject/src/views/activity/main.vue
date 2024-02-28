@@ -9,7 +9,7 @@
     </div>
     <!-- 这里是我的两个弹出层的放置位置 -->
     <Add :flage.sync="addFlage" style="width: 800px;" />
-    <Edit :flage.sync="editFlage" :activityid="activityid" :initdata="initdata" />
+    <Edit :key="componentKey" :flage.sync="editFlage" :activityid="activityid" :initdata="initdata" />
 
   </div>
 </template>
@@ -37,7 +37,8 @@ export default {
         serchyear: '',
         serchin: ''
       },
-      initdata: ''
+      initdata: '',
+      componentKey: 0
     }
   },
   methods: {
@@ -50,6 +51,9 @@ export default {
       console.log('这是我的子组件传入来的数据' + data)
       this.searchData = data
       console.log(this.searchData) // 可以在控制台中查看传递过来的数据
+    },
+    reloadComponent() {
+      this.componentKey += 1 // 修改 key 以触发组件重新加载
     }
   }
 
