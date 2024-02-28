@@ -3,7 +3,7 @@
     <div class="mybox-top">
       <el-row :gutter="10">
         <el-col :xs="4" :sm="4" :md="4" :lg="5" :xl="4">
-          <el-input v-model="input" placeholder="请输入学生学号查询" />
+          <el-input v-model="input" placeholder="请输入学期关键字进行查询" />
         </el-col>
         <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
           <el-button type="primary">搜索</el-button>
@@ -14,7 +14,7 @@
       </el-row>
     </div>
     <el-table
-      :data="tableData"
+      :data="filteredData"
       border
       style="width: 100%"
     >
@@ -74,6 +74,20 @@ export default {
       tableData: [
       ],
       input: ''
+    }
+  },
+  computed: {
+    filteredData() {
+      let filtered = this.tableData
+      const keyword = this.input
+
+      if (keyword) {
+        filtered = filtered.filter(item => {
+          return item.name.includes(keyword)
+        })
+      }
+
+      return filtered
     }
   },
   created() {

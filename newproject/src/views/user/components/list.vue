@@ -2,7 +2,7 @@
   <div>
     <el-table
       v-loading="loading"
-      :data="tableData"
+      :data="filteredData"
       border
       style="width: 100%"
     >
@@ -79,12 +79,24 @@
 </template>
 
 <script>
-import { getall } from '@/api/user'
+import { getall, userdelete } from '@/api/user'
 import edit from '@/views/user/edit.vue'
 export default {
   name: 'UserTable',
   components: {
     edit
+  },
+  props: {
+    // 年份筛选条件
+    serchyear: {
+      type: String,
+      required: true
+    },
+    // 学号筛选条件
+    serchid: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return {
@@ -93,6 +105,32 @@ export default {
       tableData: [],
       loading: true,
       tempeditinit: ''// 这里的东西指的是我传入编辑时的数据
+    }
+  },
+  computed: {
+    filteredData() {
+      let filtered = this.tableData
+      const keyword = this.serchid
+      const year = this.serchyear
+
+      if (keyword) {
+        filtered = filtered.filter(item => {
+          return item.studeid.includes(keyword)
+        })
+      }
+
+      if (year) {
+        filtered = filtered.filter(item => {
+          return item.year === year
+        })
+      }
+
+      return filtered
+    }
+  },
+  watch: {
+    flagerc(newVal) {
+      if (newVal === false) this.initlist()
     }
   },
   created() {
@@ -105,8 +143,23 @@ export default {
       this.tempuser = row.id
       this.flagerc = true
     },
+    // 点击禁用后的事件
     handleDelete(index, row) {
       console.log(index, row)
+      userdelete(row.uid).then(() => {
+        this.$message({
+          type: 'success',
+          message: '修改状态成功'
+        })
+      }).catch(response => {
+        console.error(response)
+        this.$message({
+          type: 'error',
+          message: '服务器发生错误，修改失败'
+        })
+      }).finally(() => {
+        this.tableData[index].state = !this.tableData[index].state
+      })
     },
     switchtype(row) {
       switch (row.state) {

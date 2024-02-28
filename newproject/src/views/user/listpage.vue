@@ -4,7 +4,7 @@
     <div class="mybox-top">
       <el-row :gutter="10">
         <el-col :xs="4" :sm="4" :md="4" :lg="5" :xl="4">
-          <el-input v-model="input" placeholder="请输入学生学号查询" />
+          <el-input v-model="serchid" placeholder="请输入学生学号查询" />
         </el-col>
         <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
           <el-button type="primary">搜索</el-button>
@@ -14,11 +14,12 @@
         </el-col>
         <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
           <el-select v-model="serchyear" placeholder="筛选入学年份">
+            <el-option label="请选择年份" value="" />
             <el-option
               v-for="item in options"
-              :key="item.id"
+              :key="item.stageName"
               :label="item.stageName"
-              :value="item.id"
+              :value="item.stageName"
             />
           </el-select>
         </el-col>
@@ -26,7 +27,7 @@
     </div>
     <!-- 中间表格位置 -->
     <div>
-      <userTable />
+      <userTable :serchyear="serchyear" :serchid="serchid" />
     </div>
 
     <!-- 我的用户添加弹出层 -->
@@ -49,7 +50,8 @@ export default {
       input: '',
       options: [],
       serchyear: '',
-      addflage: false
+      addflage: false,
+      serchid: ''
     }
   },
   created() {

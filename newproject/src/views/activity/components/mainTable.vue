@@ -2,7 +2,7 @@
   <div>
     <el-table
       v-loading="loading"
-      :data="tableData"
+      :data="filteredData"
       border
       style="width: 100%"
     >
@@ -17,6 +17,11 @@
           {{ scope.$index+1 }}
         </template>
       </el-table-column>
+      <el-table-column
+        prop="activityName"
+        label="活动名称"
+        width="120"
+      />
       <el-table-column
         prop="initiatingUnit"
         label="发起单位"
@@ -126,6 +131,10 @@ export default {
     activityid: {
       type: [Number, String],
       required: true
+    },
+    serchdate: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -135,6 +144,49 @@ export default {
       aid: '',
       tempEditflage: false,
       loading: true
+    }
+  },
+  computed: {
+    filteredData() {
+      let filtered = this.tableData
+      const Name = this.serchdate.serchname
+      const Type = this.serchdate.serchtype
+      const Year = this.serchdate.serchyear
+      const Go = this.serchdate.serchin
+
+      if (Name) {
+        filtered = filtered.filter(item => {
+          return item.activityName.includes(Name)
+        })
+      }
+
+      if (Type) {
+        filtered = filtered.filter(item => {
+          return item.activityType.includes(Type)
+        })
+      }
+
+      if (Year.length !== 0) {
+        filtered = filtered.filter(item => {
+          // 检查item的academicYear是否包含在Year数组中的任何一个元素中
+          return Year.includes(item.academicYear)
+        })
+      }
+
+      if (Go) {
+        const currentTime = new Date() // 获取当前时间
+
+        filtered = filtered.filter(item => {
+          // 将活动开始时间和结束时间转换为时间戳
+          const startTime = new Date(item.activityStartTime).getTime()
+          const endTime = new Date(item.activityEndTime).getTime()
+
+          // 检查当前时间是否在活动时间范围内
+          return currentTime >= startTime && currentTime <= endTime
+        })
+      }
+
+      return filtered
     }
   },
   watch: {

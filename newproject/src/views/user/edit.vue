@@ -51,13 +51,13 @@
                     <!-- 左侧第二个小块 -->
                     <div style="height: 50px;  margin:0 0 40px 0">
                       <el-form-item label="学生性别">
-                        <el-input v-model="form.sex" />
+                        <el-input v-model="form.sex" :disabled="true" />
                       </el-form-item>
                     </div>
                     <!-- 左侧第三个小块 -->
                     <div style="height: 50px;  margin:0 0 0 0">
                       <el-form-item label="行政年纪">
-                        <el-input v-model="form.start" />
+                        <el-input v-model="form.start" :disabled="true" />
                       </el-form-item>
                     </div>
                   </el-col>
@@ -131,9 +131,9 @@
                 </el-row>
 
                 <el-row :gutter="10" style="margin-top: 15px;">
-                  <el-col :span="4"><el-button type="primary">确认修改</el-button></el-col>
+                  <el-col :span="4"><el-button type="primary" @click="clickedit">确认修改</el-button></el-col>
 
-                  <el-col :span="4"><el-button type="danger">取消</el-button></el-col>
+                  <el-col :span="4"><el-button type="danger" @click="clickcancel">取消</el-button></el-col>
                 </el-row>
 
               </el-form>
@@ -149,7 +149,7 @@
 
 <script>
 // import Details from './components/editdetails.vue'
-import { getInitTable } from '@/api/user'
+import { getInitTable, edituser } from '@/api/user'
 export default {
   components: {
     // Details
@@ -176,6 +176,11 @@ export default {
         start: '',
         iphone: '',
         Imp: ''
+      },
+      edit: {
+        Id: '',
+        Name: '',
+        Phone: ''
       }
     }
   },
@@ -224,6 +229,28 @@ export default {
           // 在出现错误时也要将loading设置为false
           this.loading = false
         })
+    },
+    // 点击修改事件
+    clickedit() {
+      this.edit.Id = this.tempeditinit.uid
+      this.edit.Name = this.form.name
+      this.edit.Phone = this.form.iphone
+      edituser(this.edit).then(() => {
+        this.$message({
+          type: 'success',
+          message: '修改成功！'
+        })
+      }).catch(Response => {
+        console.error(Response)
+        this.$message({
+          type: 'error',
+          message: '服务器发生错误，修改失败'
+        })
+      })
+    },
+    // 点击取消事件
+    clickcancel() {
+      this.dialogFormVisible = false
     }
   }
 

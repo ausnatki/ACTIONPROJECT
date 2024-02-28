@@ -77,3 +77,21 @@ export function getInitTable(id) {
     params: { id }
   })
 }
+
+// 修改功能
+export function edituser(user) {
+  return request({
+    url: '/api/SysUser/EditUser',
+    method: 'post',
+    data: user
+  })
+}
+
+// 点击禁用后的事件
+export function userdelete(id) {
+  return request({
+    url: '/api/SysUser/userDelete',
+    method: 'get',
+    params: { id }
+  })
+}
